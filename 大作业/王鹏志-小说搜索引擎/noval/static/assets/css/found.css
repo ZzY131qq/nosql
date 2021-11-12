@@ -1,0 +1,37 @@
+body{
+    background-image: url(../images/doodles.png);
+}
+
+.search-form {
+    position: relative;
+    width: 100%
+}
+
+.search-form .search-input {
+    font-size: 0.875rem;
+    border-radius: 1.5rem;
+    padding-right: 3rem;
+    padding-left: 1.5rem
+}
+
+.search-form .search-input:focus {
+    border-color: #e7e9ed
+}
+
+.search-form .search-btn {
+    color: #828d9f;
+    background: none;
+    border: none;
+    position: absolute;
+    right: 0;
+    top: 0.15rem;
+    margin-right: 0
+}
+
+.search-form .search-btn:active,
+.search-form .search-btn:focus,
+.search-form .search-btn:hover {
+    outline: none !important;
+    color: #28b76b;
+    box-shadow: none
+}

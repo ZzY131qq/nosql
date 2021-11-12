@@ -3,8 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Found</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename = 'assets/css/found.css') }}">
 </head>
 <body>
+  <form class="search-form " action = "http://localhost:5000/login" method = "post">
+    <input type="text" placeholder="Search the docs..." name="search" >
+    <button type="submit"  value="Search"><i ></i></button>
+  </form>
 <ul>
   {%for dict in datas%}
   <li>
@@ -16,6 +21,7 @@
 
   
 </ul>
+a
 
 
 </body>
