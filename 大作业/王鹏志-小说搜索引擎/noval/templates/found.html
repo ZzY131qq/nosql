@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Found</title>
+</head>
+<body>
+<ul>
+  {%for dict in datas%}
+  <li>
+    {% for key, value in dict.items() %}
+    <a href="{{value}}">{{key}}:{{value}}</a></br>
+    {% endfor %}
+  </li>
+  {% endfor %} 
+
+  
+</ul>
+
+
+</body>
+</html>
