@@ -1,0 +1,140 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+    background-image: url(../images/xv.png);
+    margin: 0;
+    padding: 0;
+    font-weight: 500;
+    font-family: "Microsoft YaHei", "宋体", "Segoe UI", "Lucida Grande", Helvetica, Arial, sans-serif, FreeSans, Arimo;
+}
+
+a {
+    color: #141616;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+a:visited{
+    color: rgb(50, 123, 182);
+}
+
+ol,
+li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+li {
+    padding: 12px;
+}
+
+
+#w{
+    width: 100%;
+    height: 20%;
+    margin: 0 auto;
+}
+
+#top{
+    width: 100%;
+    height: 20%;
+}
+.p1{
+    position: fixed;
+    right: 320px;
+    font-size: 32px;
+}
+
+#container {
+    width: 100%;
+    height: 20%;
+    margin: 0 auto;
+}
+
+div.search {
+   
+    padding: 30px 0;
+}
+
+form {
+    position: relative;
+    width: 300px;
+    margin: 0 auto;
+}
+
+input,
+button {
+    border: none;
+    outline: none;
+}
+
+input {
+    width: 100%;
+    height: 42px;
+    padding-left: 30%;
+    padding-right: 30%;
+}
+
+button {
+    height: 42px;
+    width: 42px;
+    cursor: pointer;
+    position: absolute;
+}
+
+
+.bar form {
+    height: 42px;
+}
+
+.bar input {
+    width: 380px;
+    border-radius: 42px;
+    border: 2px solid #324B4E;
+    background: #f5f4f1;
+    transition: .3s linear;
+    float: right;
+}
+
+.bar input:focus {
+    width: 430px;
+}
+
+.bar button {
+    background: none;
+    top: -2px;
+    right: 0;
+}
+
+.bar button:before {
+    content: "\f002";
+    font-family: FontAwesome;
+    color: #324b4e;
+}
+
+.effect > a {
+    position: relative;
+  }
+  .effect > a:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    margin: -5px 0;
+    background-color: rgb(122, 112, 112);
+    visibility: hidden;
+    transform: scaleX(0);
+    transition: all 0.4s ease-in-out 0s;
+  }
+  .effect > a:hover:before {
+    visibility: visible;
+    transform: scaleX(1);
+  }

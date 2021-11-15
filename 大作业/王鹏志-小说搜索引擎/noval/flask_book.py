@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 #连接mongo数据库
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-mydb = myclient["book_data"]
+mydb = myclient["myfirstDB"]
 mycol = mydb["bookdata"]
 
 @app.route('/')
