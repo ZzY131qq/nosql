@@ -1,13 +1,55 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
+
 * {
     box-sizing: border-box;
 }
 
-body{
-    background-image: url(../images/doodles.png);
+body {
+    font-family: "Open Sans", sans-serif;
+    background-image: url(../images/xv.png);
     margin: 0;
     padding: 0;
     font-weight: 500;
-    font-family: "Microsoft YaHei","宋体","Segoe UI", "Lucida Grande", Helvetica, Arial,sans-serif, FreeSans, Arimo;
+    font-family: "Microsoft YaHei", "宋体", "Segoe UI", "Lucida Grande", Helvetica, Arial, sans-serif, FreeSans, Arimo;
+}
+
+a {
+    color: #141616;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+a:visited{
+    color: rgb(50, 123, 182);
+}
+
+ol,
+li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+li {
+    padding: 12px;
+}
+
+
+#w{
+    width: 100%;
+    height: 20%;
+    margin: 0 auto;
+}
+
+#top{
+    width: 100%;
+    height: 20%;
+}
+.p1{
+    position: fixed;
+    right: 320px;
+    font-size: 32px;
 }
 
 #container {
@@ -15,7 +57,11 @@ body{
     height: 20%;
     margin: 0 auto;
 }
-div.search {padding: 30px 0;}
+
+div.search {
+   
+    padding: 30px 0;
+}
 
 form {
     position: relative;
@@ -23,7 +69,8 @@ form {
     margin: 0 auto;
 }
 
-input, button {
+input,
+button {
     border: none;
     outline: none;
 }
@@ -31,8 +78,8 @@ input, button {
 input {
     width: 100%;
     height: 42px;
-    padding-left: 13px;
-    padding-right:46px;
+    padding-left: 30%;
+    padding-right: 30%;
 }
 
 button {
@@ -46,25 +93,48 @@ button {
 .bar form {
     height: 42px;
 }
+
 .bar input {
-    width: 250px;
+    width: 380px;
     border-radius: 42px;
     border: 2px solid #324B4E;
-    background: #F9F0DA;
+    background: #f5f4f1;
     transition: .3s linear;
     float: right;
 }
+
 .bar input:focus {
-    width: 300px;
+    width: 430px;
 }
+
 .bar button {
     background: none;
     top: -2px;
     right: 0;
 }
-.bar button:before{
+
+.bar button:before {
     content: "\f002";
     font-family: FontAwesome;
     color: #324b4e;
 }
 
+.effect > a {
+    position: relative;
+  }
+  .effect > a:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    margin: -5px 0;
+    background-color: rgb(122, 112, 112);
+    visibility: hidden;
+    transform: scaleX(0);
+    transition: all 0.4s ease-in-out 0s;
+  }
+  .effect > a:hover:before {
+    visibility: visible;
+    transform: scaleX(1);
+  }

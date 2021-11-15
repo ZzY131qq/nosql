@@ -7,6 +7,8 @@
   <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
+  <div id="w"></div>
+  <div id="top"><p class="p1">Novel</p></div>
   <div id="container">
   <div class="search bar">
     <form action = "http://localhost:5000/login" method = "post">
@@ -19,9 +21,12 @@
   <ul>
   {%for dict in datas%}
   <li>
-    {% for key, value in dict.items() %}
-    <a href="{{value}}">{{key}}:{{value}}</a></br> 
-    {% endfor %}
+    <div class="effect">
+
+    <a href="{{dict['网址']}}">书名:{{dict['书名']}}</a></br></br>
+    <a href="{{dict['网址']}}">网址:{{dict['网址']}}</a>
+    </br>
+  </div>
   </li>
   {% endfor %} 
 
