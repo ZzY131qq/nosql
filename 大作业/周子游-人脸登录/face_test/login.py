@@ -1,4 +1,5 @@
-from flask import Flask,request,render_template,flash
+from flask import Flask,request,render_template,flash,session,g
+from dataclasses import dataclass
 import base64
 import face_recognition
 from bson.binary import Binary
@@ -19,13 +20,28 @@ flag = 0
 username='NULL'
 email='NULL'
 app.config['SECRET_KEY'] = "sdfklas0lk42jk213khl"
+@dataclass
+class User:
+    id: int
+    username: str
+faces=mongo.db.myface.find()
+users=[]
+i=0
+for fa in faces:
+    i+=1
+    users.append(User(i,fa['username']))
+# print(users)
+@app.before_request
+def before_request():
+    g.user = None
+    if 'user_id' in session:
+        user = [u for u in users if u.id == session['user_id']][0]
+        g.user = user
 @app.route("/login",methods=["POST","GET"])
 def login():
-    
     msg={}
-    # return redirect(url_for('index'))
-    if request.method == "POST":
-        # return redirect(url_for('index'))
+    if request.method == 'POST':
+        # 登录操作
         imgdata=request.form.get("myimg")
         # print(imgdata)
         imgdata=base64.b64decode(imgdata)
@@ -35,10 +51,6 @@ def login():
         faceimg=face_recognition.load_image_file("a.png")
         facedata=face_recognition.face_encodings(faceimg)
         faces=mongo.db.myface.find()
-        if faces.count() == 0:
-            msg={"result":"未匹配到该用户-请先注册"}
-            # return render_template("login.html",msg=msg)
-            return msg
         if facedata!=[]:
             binary_data = pickle.dumps(facedata[0],protocol=-1)
             for fa in faces:
@@ -46,13 +58,16 @@ def login():
                 facedata_orign=pickle.loads(fa["face"])
                 res=face_recognition.compare_faces([facedata[0]],facedata_orign,0.5)
                 if res[0] == True:
+                    session.pop('user_id', None)
                     username=fa["username"]
-                    email=fa["email"]
-                    msg={"result":'登陆成功'}
-                    print(msg)
-                    #return redirect(url_for('index'))
-                    return msg
-               
+                    user = [u for u in users if u.username==username]
+                    if len(user) > 0:
+                        user = user[0]
+                    if user :
+                        session['user_id'] = user.id
+                        print(users)
+                        msg={"result":'登陆成功',"username":username}
+                        return msg
             msg={"result":"未匹配到该用户-请先注册"}
             print(msg)
             return msg
