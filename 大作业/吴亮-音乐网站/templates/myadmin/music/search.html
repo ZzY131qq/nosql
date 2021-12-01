@@ -1,0 +1,84 @@
+ <!DOCTYPE html>
+<html>
+  {% load static %}
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>静听网 </title>
+  <link rel="icon" href="{% static 'myadmin/music/favicon.ico' %}" mce_href="favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="{% static 'myadmin/music/favicon.ico' %}" mce_href="http://jt.hapboy.xyz/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="{% static 'myadmin/music/assets/css/reset.css' %}">
+  <link rel="stylesheet" href="{% static 'myadmin/music/assets/css/common.css'%}">
+  <link rel="stylesheet" href="{% static 'myadmin/music/assets/css/slider.css'%}">
+  <link rel="stylesheet" href="{% static 'myadmin/music/assets/css/font-awesome.min.css'%}">
+</head>
+<body>
+<!-- 导航栏 -->
+<header>
+  <div class="container">
+    <div class="navbar-header">
+<!--      <a href="" class="navbar-brand">-->
+<!--        <img src="{% static 'myadmin/music/assets/images/logo.png'%" alt="">-->
+<!--      </a>-->
+    </div>
+    <nav>
+      <ul class="nav navbar-nav navbar-link">
+        <li ><a href="{% url 'myadmin_main' %}">首页</a></li>
+        <li><a href="">留言板</a></li>
+        <li><a href="{% url 'myadmin_mybody' %}">个人主页</a></li>
+        <li><a href="{% url 'myadmin_contact' %}">反馈</a></li>
+
+      </ul>
+      <ul class="nav navbar-nav navbar-right navbar-sm">
+        <li>
+          <form action="{% url 'myadmin_search' %}" method="get">
+            <input type="text" name='searchvalue' class="search-input" placeholder="歌名 / 歌手">
+            <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </form>
+        </li>
+          <li><a href="{% url 'myadmin_mybody' %}">{{ request.session.adminuser.username }},欢迎你</a></li>
+          <li>  <a href="{% url 'myadmin_logout' %}">退出登录</a></li>
+
+
+      </ul>
+
+    </nav>
+  </div>
+    </header>
+
+<br/>
+<br/><br/>
+<br/>
+
+
+<script>
+    url = window.location.search; /* 获取属性（“?”后面的分段） */
+	if (url.search("status=1")!=-1){
+	    alert("添加成功")}
+	else if(url.search("status=0")!=-1){
+	    alert("已经添加过该歌曲")}
+</script>
+<center>
+<table width="1000" border="1"  >
+        <tr>
+            <th align="left"><h2 style="color:black">歌曲名</h2></th>
+            <th align="left"><h2 style="color:black">演唱者</h2></th>
+            <th align="left"><h2 style="color:black">单曲封面</h2></th>
+            <th align="left"><h2 style="color:black">操作</h2></th>
+        </tr>
+        {% for msg in msgs%}
+        <tr>
+            <td style="layout:fixed;height:90px">{{ msg.musicname }}</td>
+            <td style="layout:fixed;height:90px">{{ msg.authorname }}</td>
+            <td style="layout:fixed;height:90px"><img src="{{ msg.img_href }}" width="50" height="50"></td>
+            <td style="layout:fixed;height:90px">
+                <a href="{% url 'myadmin_ilike' %}?msg={{msg}}&key={{key}}"> 加入歌单 </a>
+                <a href="{{ msg.music_href }}" download="{{msg.music_name}}.m4a" target="_blank" > 下载 </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</center>
+</body>
+</html>
