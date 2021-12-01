@@ -13,7 +13,7 @@ body {
     font-family: "Microsoft YaHei", "宋体", "Segoe UI", "Lucida Grande", Helvetica, Arial, sans-serif, FreeSans, Arimo;
 }
 
-a {
+a:link {
     color: #141616;
     cursor: pointer;
     text-decoration: none;
@@ -21,13 +21,13 @@ a {
 }
 
 a:visited{
-    color: rgb(50, 123, 182);
+    color: rgb(8, 8, 8);
 }
 
 ol,
 li {
     margin: 0;
-    padding: 0;
+    padding: 12px;
     list-style: none;
 }
 

@@ -4,6 +4,7 @@ import pymongo
 import re
 import jieba
 
+
 #搜索匹配字符串
 def is_in(sub_str,full_str):
     if re.findall(sub_str, full_str):
@@ -15,7 +16,7 @@ app = Flask(__name__)
 
 #连接mongo数据库
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-mydb = myclient["book_data"]
+mydb = myclient["myfirstDB"]
 mycol = mydb["bookdata"]
 
 @app.route('/')
