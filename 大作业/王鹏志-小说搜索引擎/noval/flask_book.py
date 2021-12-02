@@ -3,7 +3,7 @@ from flask import Flask, redirect, url_for, request,render_template
 import pymongo
 import re
 import jieba
-
+from flask_paginate import Pagination
 
 #搜索匹配字符串
 def is_in(sub_str,full_str):
@@ -24,7 +24,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/book_url/<path:bookurl>')
-def book_url(bookurl):
+def book_url(bookurl,limit=10):
    # print(bookurl)
    book_list = []
    b = []
@@ -50,7 +50,13 @@ def book_url(bookurl):
          # print(a)
          book_list.append(a)
    # print(book_list)
-   return render_template('found.html',datas = book_list)
+   data = book_list
+   page = int(request.args.get("page", 1))
+   start = (page - 1) * limit
+   end = page * limit if len(data) > page * limit else len(data)
+   paginate = Pagination(page=page, total=len(data))
+   ret = data[start:end]
+   return render_template('found.html',datas=ret, paginate=paginate)
 
 
 #接受前端传来的小说名字，并在数据库里面搜索
