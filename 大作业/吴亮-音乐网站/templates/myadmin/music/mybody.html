@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+  {% load static %}
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>静听网</title><link rel="icon" href="{% static 'myadmin/music/favicon.ico' %}" mce_href="favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="{% static 'myadmin/music/favicon.ico' %}" mce_href="http://jt.hapboy.xyz/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="{% static 'myadmin/music/assets/css/reset.css' %}">
+  <link rel="stylesheet" href="{% static 'myadmin/music/assets/css/common.css' %}">
+  <link rel="stylesheet" href="{% static 'myadmin/music/assets/css/music.css'%}">
+  <link rel="stylesheet" href="{% static 'myadmin/music/assets/css/font-awesome.min.css'%}">
+</head>
+
+
+<body>
+<header>
+  <div class="container">
+    <div class="navbar-header">
+<!--      <a href="" class="navbar-brand">-->
+<!--        <img src="{% static 'myadmin/music/assets/images/logo.png'%" alt="">-->
+<!--      </a>-->
+    </div>
+    <nav>
+      <ul class="nav navbar-nav navbar-link">
+        <li ><a href="{% url 'myadmin_main' %}">首页</a></li>
+        <li><a href="javascript:void(O)">留言板</a></li>
+        <li class="active"><a href="javascript:void(O)">个人主页</a></li>
+        <li><a href="{% url 'myadmin_contact' %}">反馈</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right navbar-sm">
+        <li>
+          <form action="{% url 'myadmin_search' %}" method="get">
+            <input type="text" name='searchvalue' class="search-input" placeholder="歌名 / 歌手">
+            <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </form>
+        </li>
+          <li><a href="{% url 'myadmin_mybody' %}">{{ request.session.adminuser.username }},欢迎你</a></li>
+          <li>  <a href="{% url 'myadmin_logout' %}">退出登录</a></li>
+
+
+      </ul>
+
+    </nav>
+  </div>
+</header>
+
+
+
+<center style="font-size:18px; font-weight:bolder ; margin:10px"> 关注好友 </center>
+<center>
+<form method="post" action="{% url 'myadmin_searchfriend' %}">
+    {% csrf_token %}
+<input type="text" name='searchfriend' class="search-input"  placeholder="搜索用户名">
+<button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+</form>
+
+</center>
+{% if friendusername != None%}
+<center>
+ <table style="margin-top:20px;margin-left:160px" width="800" border="1"  >
+        <tr>
+            <th align="left"><h3 style="color:black">搜索结果</h3></th>
+            <th align="left"><h3 style="color:black">个性签名</h3></th>
+            <th align="left"><h3 style="color:black">操作</h3></th>
+        </tr>
+        <tr>
+            <td style="layout:fixed;height:90px">{{ friendusername }}</td>
+            <td style="layout:fixed;height:90px">{{ friendlable }}</td>
+            <td style="layout:fixed;height:90px">
+                {% if friendmsg == 0%}
+                <a href="{% url 'myadmin_addfriend' %}?friendid={{friendid}}"> 添加 </a>
+                {% elif friendmsg == 1%}
+                <a href="{% url 'myadmin_delfriend' %}?friendid={{friendid}}"> 删除 </a>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+</center>
+{%endif%}
+
+<script>
+    url = window.location.search; /* 获取属性（“?”后面的分段） */
+	if (url.search("status=1")!=-1){
+	    alert("添加成功")}
+	else if(url.search("status=0")!=-1){
+	    alert("已经添加过该好友")}
+</script>
+<center style="margin-top:20px;font-size:18px; font-weight:bolder ;"> 修改我的信息 </center>
+<br/>
+
+<div style="width: 60%;margin-left:35%;margin-top:10px;">
+    <form method="post" action="{% url 'myadmin_edit' %}">
+        {% csrf_token %}
+        <font color="red">{{ info }}</font>
+        <p>
+            用户名&nbsp;&nbsp;：
+            <input type="text" class="txt" size="12" value="{{ myuser.username }}" maxlength="20" name="username"/>
+        </p>
+        <p>
+            性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：
+            {%if myuser.gender == "woman" %}
+            <input type="radio" name="gender"  value="man"/>男
+            <input type="radio" name="gender" checked value="woman"/>女
+            {% else %}
+            <input type="radio" name="gender" checked value="man"/>男
+            <input type="radio" name="gender" value="woman"/>女
+            {% endif %}
+        </p>
+        <p>
+            账&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
+            <input type="text" class="txt" value="{{ myuser.number}}" name="number"/>
+        </p>
+        <p>
+            联系电话：
+            <input type="text" class="txt" value="{{ myuser.phonenumber}}" name="phonenumber"/>
+        </p>
+        <p>
+            电子邮箱：
+            <input type="text" class="txt" value="{{ myuser.email}}" name="email"/>
+        </p>
+        <p>
+            学校：
+            <input type="text" class="txt" value="{{ myuser.school}}" name="school"/>
+        </p>
+        <p>
+            签名：
+            <br/>
+            <textarea name="lable"  id="test" cols="50" rows="5">{{ myuser.lable }}</textarea>
+            <br/>
+            <input type="submit" name="submit" value="提交"/>
+            <input type="reset" name="reset" value="清除"/>
+        </p>
+
+    </form>
+</div>
+
+</body>
+</html>
