@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 #连接mongo数据库
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-mydb = myclient["myfirstDB"]
+mydb = myclient["book_data"]
 mycol = mydb["bookdata"]
 
 @app.route('/')
@@ -95,16 +95,7 @@ def login():
             for x in mydoc:
                url.append(x['book_url'])
          return redirect(url_for('book_url',bookurl = url))
-      # #获取对应url值
-      # myquery = {'book_name':{ "$regex": "^{}".format(book_name)}}
-      # mydoc = mycol.find(myquery)
-      # url = []
-      # for x in mydoc:
-      #    url.append(x['book_url'])
-      # if url:
-      #    return redirect(url_for('book_url',bookurl = url))
-      # else:
-      #    return render_template('notfound.html')
+     
 
 
    elif request.method == 'GET':
