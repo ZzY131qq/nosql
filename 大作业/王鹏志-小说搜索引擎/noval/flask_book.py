@@ -24,7 +24,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/book_url/<path:bookurl>')
-def book_url(bookurl,limit=10):
+def book_url(bookurl,limit=15):
    # print(bookurl)
    book_list = []
    b = []
@@ -54,9 +54,14 @@ def book_url(bookurl,limit=10):
    page = int(request.args.get("page", 1))
    start = (page - 1) * limit
    end = page * limit if len(data) > page * limit else len(data)
-   paginate = Pagination(page=page, total=len(data))
+   total = int(len(data))
+   paginate = Pagination(bs_version=3,page=page, total=len(data),outer_window=0, inner_window=1)
    ret = data[start:end]
-   return render_template('found.html',datas=ret, paginate=paginate)
+   
+   totalPage = total / limit if total % limit == 0 else (total / limit) + 1
+   averagePage = int(totalPage/page) + 1
+   pageInfo={"nowPage":page, "pageSize":limit, "total":total, "totalPage":totalPage,"averagePage":averagePage}
+   return render_template('found.html',datas=ret,pageInfo=pageInfo, paginate=paginate,bookurl=bookurl)
 
 
 #接受前端传来的小说名字，并在数据库里面搜索
