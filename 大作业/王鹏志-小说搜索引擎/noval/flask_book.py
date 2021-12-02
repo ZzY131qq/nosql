@@ -3,6 +3,7 @@ from flask import Flask, redirect, url_for, request,render_template
 import pymongo
 import re
 import jieba
+from flask_paginate import Pagination
 
 #搜索匹配字符串
 def is_in(sub_str,full_str):
@@ -15,7 +16,7 @@ app = Flask(__name__)
 
 #连接mongo数据库
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-mydb = myclient["book_data"]
+mydb = myclient["myfirstDB"]
 mycol = mydb["bookdata"]
 
 @app.route('/')
@@ -23,7 +24,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/book_url/<path:bookurl>')
-def book_url(bookurl):
+def book_url(bookurl,limit=15):
    # print(bookurl)
    book_list = []
    b = []
@@ -49,7 +50,18 @@ def book_url(bookurl):
          # print(a)
          book_list.append(a)
    # print(book_list)
-   return render_template('found.html',datas = book_list)
+   data = book_list
+   page = int(request.args.get("page", 1))
+   start = (page - 1) * limit
+   end = page * limit if len(data) > page * limit else len(data)
+   total = int(len(data))
+   paginate = Pagination(bs_version=3,page=page, total=len(data),outer_window=0, inner_window=1)
+   ret = data[start:end]
+   
+   totalPage = total / limit if total % limit == 0 else (total / limit) + 1
+   averagePage = int(totalPage/page) + 1
+   pageInfo={"nowPage":page, "pageSize":limit, "total":total, "totalPage":totalPage,"averagePage":averagePage}
+   return render_template('found.html',datas=ret,pageInfo=pageInfo, paginate=paginate,bookurl=bookurl)
 
 
 #接受前端传来的小说名字，并在数据库里面搜索
