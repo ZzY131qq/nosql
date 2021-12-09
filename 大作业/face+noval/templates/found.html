@@ -4,37 +4,62 @@
   <meta charset="UTF-8">
   <title>Found</title>
   <link rel="stylesheet" href="{{ url_for('static', filename = 'assets/css/found.css') }}">
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename = 'assets/css/layui.css') }}"> -->
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename = 'assets/js/layui.js') }}"> -->
   <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="http://code.jquery.com/jquery-latest.js" rel="stylesheet">
 </head>
 <body>
   <div id="w"></div>
-  <div id="top"><p class="p1">Novel</p></div>
+  <div id="top"><p class="p1">Novel </p></div>
+  <div class="right-page">{{ paginate.links }}</div>
   <div id="container">
   <div class="search bar">
-    <form action = "http://localhost:5000/notfound" method = "post">
+    <form action = "http://localhost:5000/login" method = "post">
         <input type="text" placeholder="请输入您要搜索的内容..." name="search">
         <button type="submit"  value="Search"><i ></i></button>
     </form>
   </div>
 </div>
-  <div id="container">
-  <ul>
-  {%for dict in datas%}
-  <li>
+<div id="container">
+  <ul class="page-text">
+    {%for dict in datas%}
+    <li>
     <div class="effect">
 
-    <a href="{{dict['网址']}}">书名:{{dict['书名']}}</a></br></br>
-    <a href="{{dict['网址']}}">网址:{{dict['网址']}}</a>
-    </br>
-  </div>
-  </li>
-  {% endfor %} 
-
+      <a href="{{dict['网址']}}">书名:{{dict['书名']}}</a></br></br>
+      <a href="{{dict['网址']}}">网址:{{dict['网址']}}</a>
+      </br>
+    </div>
+    </li>
+    {% endfor %} 
+    <!-- <tbody id="demoBody"></tbody> -->
+  </ul>
+  <!-- <div id="demo"></div> -->
   
-</ul>
+
+
+
+  <div class="page-bottom">
+    <span>页码: <span style="color: #00baaa;">{{ pageInfo.nowPage }}
+    </span> 每页: <span style="color: #00baaa;">{{ pageInfo.pageSize }}</span> 条记录 共: <span
+            style="color: #00baaa;">{{ pageInfo.total }}</span> 条记录</span>
+
+  {% if  paginate.page!=pageInfo.totalPage %}
+    <a href="{{ url_for("book_url",bookurl=bookurl,page=paginate.page+1)}}">下一页</a>
+  {% else %}
+    <a href="javascript:void(0)",page=paginate.page+1)}}">下一页</a>
+  {% endif %}
+
+  {% if  paginate.page!=1 %}
+    <a href="{{ url_for("book_url",bookurl=bookurl,page=paginate.page-1) }}">上一页 |</a>
+  {% else %}
+    <a href="javascript:void(0)">上一页 |</a>
+  {% endif %}
+
+
+  </div>
 </div>
-
-
-
 </body>
+
 </html>
