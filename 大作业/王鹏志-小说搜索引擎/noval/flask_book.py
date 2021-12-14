@@ -24,7 +24,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/book_url/<path:bookurl>')
-def book_url(bookurl,limit=15):
+def book_url(bookurl,limit=10):
    # print(bookurl)
    book_list = []
    b = []
