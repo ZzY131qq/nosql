@@ -1,0 +1,6 @@
+requests==2.25.1
+lxml==4.6.3
+Django==3.2.5
+PyMySQL==0.10.1
+beautifulsoup4==4.9.3
+pycryptodome==3.10.1

@@ -10,6 +10,7 @@ from flask import Flask, redirect, url_for, request,render_template
 import pymongo
 import re
 import jieba
+from flask_paginate import Pagination
 
 #搜索匹配字符串
 def is_in(sub_str,full_str):
@@ -25,7 +26,7 @@ app.config["MONGO_DBNAME"]="myface_test"
 app.config["MONGO_URI"]="mongodb://localhost:27017/myface_test"
 #bookdata
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-mydb = myclient["book_data"]
+mydb = myclient["myface_test"]
 mycol = mydb["bookdata"]
 #将app应用与mongodb产生联系,使用PyMongo(app)
 mongo=PyMongo(app)
@@ -136,6 +137,7 @@ def register():
                 return {"result":"请先完善个人信息"}
             mongo.db.myface.insert_one({'face':binary_data,'username':username,'email':email})
             i+=1
+            print(i)
             users.append(User(i,username))
             g.users=users
             return {"result":"注册成功-人脸数据存储成功","username":username,"email":email}
@@ -146,10 +148,6 @@ def register():
 
     return render_template("register.html")
 
-# @app.route("/register",methods=["POST","GET"])
-# def register():
-#     # print('index')  
-#     return render_template("register.html")
 
 @app.route("/logout")
 def logout():
@@ -168,7 +166,7 @@ def index():
 
 
 @app.route('/book_url/<path:bookurl>')
-def book_url(bookurl):
+def book_url(bookurl,limit=15):
    # print(bookurl)
    book_list = []
    b = []
@@ -182,7 +180,7 @@ def book_url(bookurl):
             b[i] = b[i][1:-1]
          else:
             b[i] = b[i][2:-1]
-#    print(b)
+   print(b)
    for u in b:
       myquery = { "book_url": u}
       mydoc = mycol.find(myquery)
@@ -194,7 +192,19 @@ def book_url(bookurl):
          # print(a)
          book_list.append(a)
    # print(book_list)
-   return render_template('found.html',datas = book_list)
+   data = book_list
+   page = int(request.args.get("page", 1))
+   start = (page - 1) * limit
+   end = page * limit if len(data) > page * limit else len(data)
+   total = int(len(data))
+   paginate = Pagination(bs_version=3,page=page, total=len(data),outer_window=0, inner_window=1)
+   ret = data[start:end]
+   
+   totalPage = total / limit if total % limit == 0 else (total / limit) + 1
+   averagePage = int(totalPage/page) + 1
+   pageInfo={"nowPage":page, "pageSize":limit, "total":total, "totalPage":totalPage,"averagePage":averagePage}
+   return render_template('found.html',datas=ret,pageInfo=pageInfo, paginate=paginate,bookurl=bookurl)
+
 
 
 #接受前端传来的小说名字，并在数据库里面搜索
@@ -228,16 +238,7 @@ def notfound():
             for x in mydoc:
                url.append(x['book_url'])
          return redirect(url_for('book_url',bookurl = url))
-      # #获取对应url值
-      # myquery = {'book_name':{ "$regex": "^{}".format(book_name)}}
-      # mydoc = mycol.find(myquery)
-      # url = []
-      # for x in mydoc:
-      #    url.append(x['book_url'])
-      # if url:
-      #    return redirect(url_for('book_url',bookurl = url))
-      # else:
-      #    return render_template('notfound.html')
+     
 
 
    elif request.method == 'GET':

@@ -1,0 +1,242 @@
+  <!DOCTYPE html>
+<html>
+  {% load static %}
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>静听网 </title>
+  <link rel="icon" href="{% static 'myadmin/music/favicon.ico' %}" mce_href="favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="{% static 'myadmin/music/favicon.ico' %}" mce_href="http://jt.hapboy.xyz/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="{% static 'myadmin/music/assets/css/reset.css' %}">
+  <link rel="stylesheet" href="{% static 'myadmin/music/assets/css/common.css'%}">
+  <link rel="stylesheet" href="{% static 'myadmin/music/assets/css/slider.css'%}">
+  <link rel="stylesheet" href="{% static 'myadmin/music/assets/css/font-awesome.min.css'%}">
+</head>
+<body>
+<!-- 导航栏 -->
+<header>
+  <div class="container">
+    <div class="navbar-header">
+<!--      <a href="" class="navbar-brand">-->
+<!--        <img src="{% static 'myadmin/music/assets/images/logo.png'%" alt="">-->
+<!--      </a>-->
+    </div>
+    <nav>
+      <ul class="nav navbar-nav navbar-link">
+        <li class="active"><a href="javascript:void(O)">{{ friendname }}的首页</a></li>
+        <li><a href="javascript:void(O)">留言板</a></li>
+        <li><a href="{% url 'myadmin_main' %}">返回我的主页</a></li>
+
+      </ul>
+      <ul class="nav navbar-nav navbar-right navbar-sm">
+        <li>
+          <form action="{% url 'myadmin_search' %}" method="get">
+            <input type="text" name='searchvalue' class="search-input" placeholder="歌名 / 歌手">
+            <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </form>
+        </li>
+          <li><a href="javascript:void(O)">欢迎来到{{friendname}}的主页</a></li>
+          <li>  <a href="{% url 'myadmin_logout' %}">退出登录</a></li>
+
+
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+<!-- 轮播图 -->
+<div class="container-sm slider-wrap">
+  <div class="slider">
+    <div class="slider-item-list"></div>
+    <div class="slider-dots">
+      <div class="slider-dots-wrap"></div>
+    </div>
+    <div class="slider-arrows">
+      <div class="slider-arrows-wrap">
+        <span class="slider-arrow slider-arrow-left" onclick="HBSlider.turn(-1)"></span>
+        <span class="slider-arrow slider-arrow-right" onclick="HBSlider.turn(1)"></span>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 主内容区域 -->
+<div class="container-sm box">
+  <!-- 主内容 -->
+  <div class="main">
+    <div class="main-wrap">
+      <div class="content-box">
+        <!-- 我的歌单 -->
+        <div class="hot-recommand">
+          <div class="content-header">
+            <h2><i class="fa fa-music red"></i>{{friendname}}的歌单|&nbsp;&nbsp;&nbsp;{{ friendlable }}</h2>
+            
+            <!--<span class="more"><a href="#">更多</a></span>-->
+          </div>
+          <ul class="music-list clearfix">
+
+          {% for music in music_res%}
+            <li>
+              <div class="u-cover">
+                <img src="{{music.img_href}}">
+                <a href="{% url 'myadmin_music' friendname %}?musicid={{ music.id }}" title="{{ forloop.counter }}" class="msk"></a>
+              </div>
+              <p class="dec">
+                <a href="{% url 'myadmin_music' friendname %}?musicid={{ music.id }}" title="{{ forloop.counter }}">{{ music.musicname }}</a>
+              </p>
+              <div class="author">{{music.authorname}}</div>
+            </li>
+          {% endfor %}
+
+          </ul>
+          <div style="text-align:center">
+            <center>
+              {% if pIndex == 1%}
+                <a href="javascript:volid(0);" style="color:grey;">上一页</a>&nbsp;
+              {%else%}
+                <a href="{%url 'myadmin_friend' friendname%}?page={{ pIndex|add:'-1' }}">上一页</a>&nbsp;
+              {% endif %}
+
+                {% for p in pagelist %}
+                  {% if pIndex == p%}
+                    &nbsp;<a href="javascript:volid(0);" style="color:grey;">{{p}}</a>
+                  {%else%}
+                    &nbsp;<a href="{%url 'myadmin_friend' friendname%}?page={{ p }}">{{p}}</a>
+                  {% endif %}
+                {% endfor %}
+                {% if pIndex == pnum_pages%}
+                <a href="javascript:volid(0);" style="color:grey;">下一页</a>&nbsp;
+              {%else%}
+                <a href="{%url 'myadmin_friend' friendname%}?page={{ pIndex|add:'1' }}">下一页</a>&nbsp;
+              {% endif %}
+          </center>
+          </div>
+
+        </div>
+        <br/>
+        <!-- 热门榜单 -->
+        <div class="category">
+          <div class="content-header">
+            <h2><i class="fa fa-music red"></i>热门榜单</h2>
+          </div>
+          <div class="row">
+            <div class="category-music-list">
+              <div class="category-header">
+                🎹 最热门
+              </div>
+              <ul>
+
+              {% for music in hotmusic_res%}
+
+                  <li class="music-list-item">
+                    <div class="title">
+                      <div class="title_wrap">
+                        <span class="rank">{{ forloop.counter }}</span>
+                        <a href="{% url 'myadmin_music' friendname %}?musicid={{ music.id }}" title="{{ forloop.counter }}">{{ music.musicname }}</a>
+                      </div>
+                    </div>
+                    <div class="info">
+                      <span class="date">{{ music.authorname }}</span>
+                      <span class="avatar"><img
+                          src="{{music.img_href}}"></span>
+                    </div>
+                  </li>
+
+                {% endfor %}
+
+              </ul>
+            </div>
+  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 侧边栏 -->
+  <div class="sidebar" style="min-height: 1094px">
+    <div class="right-module">
+      <h4>最新单曲</h4>
+      <ul class="new-artist-songs">
+        <li class="artist-song">
+          <div class="avatar">
+            <img src="{% static 'myadmin/music/storage/avatar/0.jpg' %}">
+          </div>
+          <div class="info">
+            <h3>开发中</h3>
+            <p>开发中 / <span>开发中</span>开发中</p>
+          </div>
+          <a href="javascript:void(0)" title="Refrain" class="cover-link"></a>
+        </li>
+      </ul>
+    </div>
+    <div class="right-module">
+
+      <h4>我的好友</h4>
+      {% for friend in friendict%}
+      <ul class="new-artist-songs">
+        <li class="artist-song">
+          <div class="avatar">
+            <img src="{% static 'myadmin/music/storage/avatar/20.jpg' %}">
+          </div>
+          <div class="info">
+            <h3>{{ friend.username }}</h3>
+            <p>{{friend.lable}}</p>
+          </div>
+          <a href="{% url 'myadmin_friend' friend.username%}" title="{{friend.username}}" class="cover-link"></a>
+        </li>
+      {% endfor %}
+
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- 底部版权 -->
+<footer>
+  <div class="container">
+    <div class="copyright">
+      <p>前端版权：Copyright © <span class="update-year">2016</span> HaPBoy - All Rights Reserved</p>
+      <p>后端版权：Copyright © <span class="update-year">2021</span> Wuliang - All Rights Reserved</p>
+    </div>
+  </div>
+</footer>
+<!-- JS 脚本 -->
+<script src="{% static 'myadmin/music/assets/js/jquery.min.js' %}"></script>
+<script src="{% static 'myadmin/music/assets/js/HBSlider.js' %}"></script>
+<script>
+  // 轮播图数据
+  var sliderData = [
+    {
+      title: '广告位招募',
+      pic: '{% static 'myadmin/music/storage/slider/01.png' %}',
+      url: '#'
+    },
+    {
+      title: '广告位招募',
+      pic: 'http://img.zcool.cn/community/0109575540b83d0000017c946b5535.jpg',
+      url: '#'
+    },
+    {
+      title: '广告位招募',
+      pic: 'http://ww2.sinaimg.cn/large/67d25024gw1fb5h1swze9j20gq0b6acf.jpg',
+      url: '#'
+    },
+    {
+      title: '广告位招募',
+      pic: 'http://ww4.sinaimg.cn/mw690/67d25024gw1fb5hbjl32jj21hc0u01dz.jpg',
+      url: '#'
+    }
+  ];
+
+  $(function () {
+    HBSlider.setConfig({
+      autoPlay: true,
+      delay: 5
+    });
+    HBSlider.setItems(sliderData);
+    HBSlider.init();
+    HBSlider.play();
+  });
+</script>
+</body>
+</html>
