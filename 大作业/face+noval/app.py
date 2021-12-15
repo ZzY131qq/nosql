@@ -66,7 +66,6 @@ def login():
         facedata=face_recognition.face_encodings(faceimg)
         faces=mongo.db.myface.find()
         if facedata!=[]:
-            binary_data = pickle.dumps(facedata[0],protocol=-1)
             for fa in faces:
                 #取出的数据是myface数据库中的每一条记录face的"face"键对应的值
                 facedata_orign=pickle.loads(fa["face"])
@@ -98,12 +97,6 @@ def register():
     if request.method == "POST":
         username=request.form.get("username")
         email=request.form.get("email")
-        # if username=='' or email=='':
-        #     return {"result":"请先完善个人信息"}
-        # else:
-        #     return {"result":"用户名"+username+"  邮箱"+email}
-        # print(username)
-        # print(email)
         imgdata=request.form.get("myimg")
         #print(imgdata)
         imgdata=base64.b64decode(imgdata)
@@ -126,18 +119,13 @@ def register():
                 #取出的数据是myface数据库中的每一条记录face的"face"键对应的值
                 facedata_orign=pickle.loads(fa["face"])
                 res=face_recognition.compare_faces([facedata[0]],facedata_orign,0.5)
-                # print(i)
-                # print(res)
-                # i+=1
-                # line = db.myface.count()
                 if res[0] == True:
                     return {"result":"该用户已存在，请登录"}
-                # else:
             if username=='' or email=='':
                 return {"result":"请先完善个人信息"}
             mongo.db.myface.insert_one({'face':binary_data,'username':username,'email':email})
             i+=1
-            print(i)
+            # print(i)
             users.append(User(i,username))
             g.users=users
             return {"result":"注册成功-人脸数据存储成功","username":username,"email":email}
@@ -159,14 +147,13 @@ def logout():
 @app.route("/index",methods=["POST","GET"])
 def index():
     if not g.user:
-        # print('NotFound')
         return redirect(url_for('login'))
     print('index')  
     return render_template("index.html")
 
 
 @app.route('/book_url/<path:bookurl>')
-def book_url(bookurl,limit=15):
+def book_url(bookurl,limit=10):
    # print(bookurl)
    book_list = []
    b = []
@@ -180,7 +167,7 @@ def book_url(bookurl,limit=15):
             b[i] = b[i][1:-1]
          else:
             b[i] = b[i][2:-1]
-   print(b)
+#    print(b)
    for u in b:
       myquery = { "book_url": u}
       mydoc = mycol.find(myquery)
@@ -242,21 +229,36 @@ def notfound():
 
 
    elif request.method == 'GET':
+      book_names = []
+      jieguo_yesandno = 0
       #接受前端发来的小说名字
-      book_name = request.args.get('search')
-      #获取对应url值
-      myquery = {'book_name':{ "$regex": "^{}".format(book_name)}}
-      mydoc = mycol.find(myquery)
-      url = []
-      for x in mydoc:
-         url.append(x['book_url'])
-      if url:
-         return redirect(url_for('book_url',bookurl = url))
-      else:
+      book_name = request.form['search']
+      #结巴分词处理
+      ss = jieba.cut_for_search(book_name) 
+      ss = (" ".join(ss))
+      ss = ss.split(" ")
+      #匹配书名
+      for x in mycol.find({},{ "_id": 0, "book_name": 1}):
+         for name in ss:
+            jieguo = is_in(name,x['book_name'])
+            if jieguo == False:
+               pass
+            else:
+               book_names.append(jieguo)
+               jieguo_yesandno += 1
+      if jieguo_yesandno == 0:
          return render_template('notfound.html')
+      else:
+         url = []
+         for book in book_names:
+            myquery = {'book_name':book}
+            mydoc = mycol.find(myquery)
+            for x in mydoc:
+               url.append(x['book_url'])
+         return redirect(url_for('book_url',bookurl = url))
 
-   # else:
-   #    return render_template('notfound.html')
+   else:
+      return render_template('notfound.html')
 
 if __name__=="__main__":
     app.run(debug=True)
